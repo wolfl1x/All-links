@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
             avatarImg.style.opacity = 1;
         };
     } else {
-        console.warn('⚠️ Элемент .avatar-img не найден!');
+        console.warn('⚠️ Element .avatar-img not found!');
     }
 });
 
@@ -88,6 +88,7 @@ function updateTextColor() {
     document.body.style.color = isDay ? '#000000' : '#ffffff';
 }
 setInterval(updateTextColor, 1000);
+
 
 
 
