@@ -54,7 +54,10 @@ document.addEventListener('DOMContentLoaded', function() {
             'avatars/𝔶ᴏ𝗿𝕦.jpg',
             'avatars/ソ〇「い.jpg',
             'avatars/𝒚𝒐𝒓𝒖.jpg',
-            'avatars/asa mitaka.jpg'
+            'avatars/asa mitaka.jpg',
+            'avatars/ʸᵒʳᵘ.jpg',
+            'avatars/y⃫o⃫r⃫u⃫.jpg',
+            'avatars/❦.jpg'
         ];
         
         let lastIndex = sessionStorage.getItem('lastAvatarIndex');
@@ -85,4 +88,5 @@ function updateTextColor() {
     document.body.style.color = isDay ? '#000000' : '#ffffff';
 }
 setInterval(updateTextColor, 1000);
+
 
