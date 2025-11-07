@@ -60,19 +60,19 @@ document.addEventListener('DOMContentLoaded', function() {
             'avatars/❦.jpg'
         ];
         
-        let lastIndex = sessionStorage.getItem('lastAvatarIndex');
-        lastIndex = lastIndex !== null ? parseInt(lastIndex) : -1;
+        const lastAvatarIndex = window._lastAvatarIndex ?? -1;
 
         let newIndex;
         do {
             newIndex = Math.floor(Math.random() * avatars.length);
-        } while (avatars.length > 1 && newIndex === lastIndex);
+        } while (avatars.length > 1 && newIndex === lastAvatarIndex);
 
-        sessionStorage.setItem('lastAvatarIndex', newIndex);
+        window._lastAvatarIndex = newIndex;
 
-        const randomAvatar = avatars[Math.floor(Math.random() * avatars.length)];
+        const newAvatar = avatars[newIndex];
         avatarImg.style.opacity = 0;
-        avatarImg.src = randomAvatar;
+        avatarImg.src = newAvatar;
+
         avatarImg.onload = () => {
             avatarImg.style.transition = 'opacity 0.5s ease';
             avatarImg.style.opacity = 1;
@@ -88,5 +88,6 @@ function updateTextColor() {
     document.body.style.color = isDay ? '#000000' : '#ffffff';
 }
 setInterval(updateTextColor, 1000);
+
 
 
