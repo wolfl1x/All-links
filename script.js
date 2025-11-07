@@ -56,6 +56,17 @@ document.addEventListener('DOMContentLoaded', function() {
             'avatars/𝒚𝒐𝒓𝒖.jpg',
             'avatars/asa mitaka.jpg'
         ];
+        
+        let lastIndex = sessionStorage.getItem('lastAvatarIndex');
+        lastIndex = lastIndex !== null ? parseInt(lastIndex) : -1;
+
+        let newIndex;
+        do {
+            newIndex = Math.floor(Math.random() * avatars.length);
+        } while (avatars.length > 1 && newIndex === lastIndex);
+
+        sessionStorage.setItem('lastAvatarIndex', newIndex);
+
         const randomAvatar = avatars[Math.floor(Math.random() * avatars.length)];
         avatarImg.style.opacity = 0;
         avatarImg.src = randomAvatar;
@@ -74,3 +85,4 @@ function updateTextColor() {
     document.body.style.color = isDay ? '#000000' : '#ffffff';
 }
 setInterval(updateTextColor, 1000);
+
