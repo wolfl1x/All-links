@@ -60,32 +60,27 @@ document.addEventListener('DOMContentLoaded', function() {
             'avatars/❦.jpg'
         ];
         
-        if (!Array.isArray(window._avatarPool) || window._avatarPool.length === 0) {
-            
-            window._avatarPool = shuffleArray([...avatars]);
-        }
+        const lastAvatarIndex = window._lastAvatarIndex ?? -1;
 
-        const newAvatar = window._avatarPool.pop();
-        window._lastAvatar = newAvatar;
+        let newIndex;
+        do {
+            newIndex = Math.floor(Math.random() * avatars.length);
+        } while (avatars.length > 1 && newIndex === lastAvatarIndex);
 
+        window._lastAvatarIndex = newIndex;
+
+        const newAvatar = avatars[newIndex];
         avatarImg.style.opacity = 0;
         avatarImg.src = newAvatar;
+
         avatarImg.onload = () => {
             avatarImg.style.transition = 'opacity 0.5s ease';
             avatarImg.style.opacity = 1;
         };
     } else {
-        console.warn('⚠️ Element .avatar-img not found!');
+        console.warn('⚠️ Элемент .avatar-img не найден!');
     }
 });
-
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-}
 
 function updateTextColor() {
     const hours = new Date().getHours();
@@ -93,6 +88,7 @@ function updateTextColor() {
     document.body.style.color = isDay ? '#000000' : '#ffffff';
 }
 setInterval(updateTextColor, 1000);
+
 
 
 
