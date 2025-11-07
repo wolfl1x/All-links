@@ -60,19 +60,24 @@ document.addEventListener('DOMContentLoaded', function() {
             'avatars/❦.jpg'
         ];
         
-        const lastAvatarIndex = window._lastAvatarIndex ?? -1;
 
-        let newIndex;
-        do {
-            newIndex = Math.floor(Math.random() * avatars.length);
-        } while (avatars.length > 1 && newIndex === lastAvatarIndex);
+        // если нет "мешка" выбора — создаём его как перемешанный список
+        if (!window._avatarBag || window._avatarBag.length === 0) {
+            window._avatarBag = shuffleArray([...avatars]);
+        }
 
-        window._lastAvatarIndex = newIndex;
+        let newAvatar = window._avatarBag.pop();
 
-        const newAvatar = avatars[newIndex];
+        if (newAvatar === window._lastAvatar && avatars.length > 1) {
+            
+            window._avatarBag = shuffleArray([...avatars]);
+            newAvatar = window._avatarBag.pop();
+        }
+
+        window._lastAvatar = newAvatar;
+
         avatarImg.style.opacity = 0;
         avatarImg.src = newAvatar;
-
         avatarImg.onload = () => {
             avatarImg.style.transition = 'opacity 0.5s ease';
             avatarImg.style.opacity = 1;
@@ -88,6 +93,7 @@ function updateTextColor() {
     document.body.style.color = isDay ? '#000000' : '#ffffff';
 }
 setInterval(updateTextColor, 1000);
+
 
 
 
