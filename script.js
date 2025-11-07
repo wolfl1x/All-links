@@ -79,12 +79,21 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
 function updateTextColor() {
     const hours = new Date().getHours();
     const isDay = hours > 6 && hours < 20;
     document.body.style.color = isDay ? '#000000' : '#ffffff';
 }
 setInterval(updateTextColor, 1000);
+
 
 
 
