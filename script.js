@@ -60,8 +60,6 @@ document.addEventListener('DOMContentLoaded', function() {
             'avatars/❦.jpg'
         ];
         
-
-        // если нет "мешка" выбора — создаём его как перемешанный список
         if (!window._avatarBag || window._avatarBag.length === 0) {
             window._avatarBag = shuffleArray([...avatars]);
         }
@@ -93,6 +91,7 @@ function updateTextColor() {
     document.body.style.color = isDay ? '#000000' : '#ffffff';
 }
 setInterval(updateTextColor, 1000);
+
 
 
 
