@@ -60,18 +60,12 @@ document.addEventListener('DOMContentLoaded', function() {
             'avatars/❦.jpg'
         ];
         
-        if (!window._avatarBag || window._avatarBag.length === 0) {
-            window._avatarBag = shuffleArray([...avatars]);
-        }
-
-        let newAvatar = window._avatarBag.pop();
-
-        if (newAvatar === window._lastAvatar && avatars.length > 1) {
+        if (!Array.isArray(window._avatarPool) || window._avatarPool.length === 0) {
             
-            window._avatarBag = shuffleArray([...avatars]);
-            newAvatar = window._avatarBag.pop();
+            window._avatarPool = shuffleArray([...avatars]);
         }
 
+        const newAvatar = window._avatarPool.pop();
         window._lastAvatar = newAvatar;
 
         avatarImg.style.opacity = 0;
@@ -91,6 +85,7 @@ function updateTextColor() {
     document.body.style.color = isDay ? '#000000' : '#ffffff';
 }
 setInterval(updateTextColor, 1000);
+
 
 
 
