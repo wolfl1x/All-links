@@ -1,99 +1,60 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
+    const AVATAR_COUNT = 8;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const canHover = window.matchMedia('(hover: hover)').matches;
 
-    document.addEventListener('mousemove', function(e) {
-        const background = document.querySelector('.background');
-        if (!background) return;
-
-        const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
-        const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
-        background.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.1)`;
-    });
-
-    const buttons = document.querySelectorAll('.link-button');
-    buttons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            const ripple = document.createElement('span');
-            const rect = button.getBoundingClientRect();
-            const size = Math.max(rect.width, rect.height);
-            const x = e.clientX - rect.left - size / 2;
-            const y = e.clientY - rect.top - size / 2;
-
-            ripple.style.cssText = `
-                position: absolute;
-                border-radius: 50%;
-                background: currentColor;
-                opacity: 0.3;
-                transform: scale(0);
-                animation: ripple 0.6s ease-out;
-                width: ${size}px;
-                height: ${size}px;
-                left: ${x}px;
-                top: ${y}px;
-                pointer-events: none;
-            `;
-            button.appendChild(ripple);
-            setTimeout(() => ripple.remove(), 600);
+    const background = document.querySelector('.background');
+    if (background && canHover && !reduceMotion) {
+        let frame = null;
+        document.addEventListener('mousemove', (e) => {
+            if (frame) return;
+            frame = requestAnimationFrame(() => {
+                const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
+                const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
+                background.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.1)`;
+                frame = null;
+            });
         });
-    });
+    }
 
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes ripple {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
-        }
-    `;
-    document.head.appendChild(style);
+    if (!reduceMotion) {
+        document.querySelectorAll('.link-button').forEach((button) => {
+            button.addEventListener('click', (e) => {
+                const rect = button.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const ripple = document.createElement('span');
+                ripple.className = 'ripple';
+                ripple.style.width = `${size}px`;
+                ripple.style.height = `${size}px`;
+                ripple.style.left = `${e.clientX - rect.left - size / 2}px`;
+                ripple.style.top = `${e.clientY - rect.top - size / 2}px`;
+                button.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+    }
 
-    const avatarImg = document.querySelector('.avatar-img');
-    if (avatarImg) {
-        const avatars = [
-            'avatars/𝖃𝖀𝕽𝕺.jpg',
-            'avatars/𝔶ᴏ𝗿𝕦.jpg',
-            'avatars/ソ〇「い.jpg',
-            'avatars/𝒚𝒐𝒓𝒖.jpg',
-            'avatars/asa mitaka.jpg',
-            'avatars/ʸᵒʳᵘ.jpg',
-            'avatars/y⃫o⃫r⃫u⃫.jpg',
-            'avatars/❦.jpg'
-        ];
-        
-        const lastAvatarIndex = window._lastAvatarIndex ?? -1;
+    const avatar = document.querySelector('.avatar-img');
+    if (avatar) {
+        let last = -1;
+        try {
+            const saved = sessionStorage.getItem('lastAvatar');
+            if (saved !== null) last = Number(saved);
+        } catch (err) {}
 
-        let newIndex;
+        let next;
         do {
-            newIndex = Math.floor(Math.random() * avatars.length);
-        } while (avatars.length > 1 && newIndex === lastAvatarIndex);
+            next = Math.floor(Math.random() * AVATAR_COUNT) + 1;
+        } while (AVATAR_COUNT > 1 && next === last);
 
-        window._lastAvatarIndex = newIndex;
+        try {
+            sessionStorage.setItem('lastAvatar', String(next));
+        } catch (err) {}
 
-        const newAvatar = avatars[newIndex];
-        avatarImg.style.opacity = 0;
-        avatarImg.src = newAvatar;
-
-        avatarImg.onload = () => {
-            avatarImg.style.transition = 'opacity 0.5s ease';
-            avatarImg.style.opacity = 1;
-        };
-    } else {
-        console.warn('⚠️ Element .avatar-img not found!');
+        const show = () => avatar.classList.remove('is-loading');
+        avatar.classList.add('is-loading');
+        avatar.addEventListener('load', show, { once: true });
+        avatar.addEventListener('error', show, { once: true });
+        avatar.src = `avatars/avatar-${next}.jpg`;
     }
 });
-
-function updateTextColor() {
-    const hours = new Date().getHours();
-    const isDay = hours > 6 && hours < 20;
-    document.body.style.color = isDay ? '#000000' : '#ffffff';
-}
-setInterval(updateTextColor, 1000);
-
-
-
-
-
-
-
-
-
